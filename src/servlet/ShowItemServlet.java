@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import bean.CategoryBean;
+import bean.ItemBean;
 import dao.DAOException;
 import dao.ItemDAO;
 
@@ -35,9 +36,28 @@ public class ShowItemServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// パラメータの解析：actionキーを取得して処理を分岐
 		String action = request.getParameter("action");
+
 		// actionキーが「top」またはパラメータが存在しない場合はトップページに遷移
 		if (action == null || action.length() == 0 || action.equals("top")) {
 			gotoPage(request, response, "top.jsp");
+
+		// actionキーが「list」の場合：商品一覧に遷移
+		} else if (action.equals("list")) {
+			// リクエストパラメータを取得
+			String code = request.getParameter("code");
+			int categoryCode = Integer.parseInt(code);
+			try {
+				ItemDAO dao = new ItemDAO();
+				List<ItemBean> list = dao.findByCategory(categoryCode);
+				// リクエストスコープに商品リストを登録
+				 request.setAttribute("items", list);
+				// 商品一覧に遷移
+				gotoPage(request, response, "list.jsp");
+			} catch (DAOException e) {
+				e.printStackTrace();
+				request.setAttribute("message", "内部エラーが発生しました。");
+				gotoPage(request, response, "errInternal.jsp");
+			}
 		}
 	}
 

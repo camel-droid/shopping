@@ -3,6 +3,10 @@
 
 <!-- メニュー -->
 <a href="/shopping/ShowItemServlet?action=top">ようこそ</a>|
+
 <c:forEach items="${categories}" var="category">
 <a href="/shopping/ShowItemServlet?action=list&code=${category.code}">${category.name}</a>|
 </c:forEach>
+
+<a href="/shopping/snapshot/cart.html">カートを見る</a>
+
