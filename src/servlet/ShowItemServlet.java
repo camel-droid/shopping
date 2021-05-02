@@ -1,0 +1,81 @@
+package servlet;
+
+import java.io.IOException;
+import java.util.List;
+
+import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import bean.CategoryBean;
+import dao.DAOException;
+import dao.ItemDAO;
+
+/**
+ * Servlet implementation class ShowItemServlet
+ */
+@WebServlet("/ShowItemServlet")
+public class ShowItemServlet extends HttpServlet {
+	private static final long serialVersionUID = 1L;
+
+    /**
+     * @see HttpServlet#HttpServlet()
+     */
+    public ShowItemServlet() {
+        super();
+        // TODO Auto-generated constructor stub
+    }
+
+	/**
+	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
+	 */
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		// パラメータの解析：actionキーを取得して処理を分岐
+		String action = request.getParameter("action");
+		// actionキーが「top」またはパラメータが存在しない場合はトップページに遷移
+		if (action == null || action.length() == 0 || action.equals("top")) {
+			gotoPage(request, response, "top.jsp");
+		}
+	}
+
+	/**
+	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
+	 */
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		// TODO Auto-generated method stub
+		doGet(request, response);
+	}
+
+	/**
+	 * 指定されたURLに遷移する。
+	 * @param request HttpServletRequest
+	 * @param response HttpServletResponse
+	 * @param page 遷移先URL
+	 * @throws ServletException
+	 * @throws IOException
+	 */
+	private void gotoPage(HttpServletRequest request, HttpServletResponse response, String page) throws ServletException, IOException {
+		RequestDispatcher dispatcher = request.getRequestDispatcher(page);
+		dispatcher.forward(request, response);
+	}
+
+	@Override
+	/**
+	 * 商品分類リストを取得する。
+	 */
+	public void init() throws ServletException {
+		try {
+			ItemDAO dao = new ItemDAO();
+			List<CategoryBean> list = dao.findByAllCategory();
+			getServletContext().setAttribute("categories", list);
+		} catch (DAOException e) {
+			e.printStackTrace();
+			throw new ServletException();
+		}
+
+	}
+
+}
