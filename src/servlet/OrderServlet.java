@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import bean.CartBean;
+import bean.CustomerBean;
 
 /**
  * Servlet implementation class OrderServlet
@@ -31,6 +32,9 @@ public class OrderServlet extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		// リクエストの文字コードを設定
+		request.setCharacterEncoding("utf-8");
+
 		// セッションからカートを取得
 		HttpSession session = request.getSession(false);	// すでにセッションに登録されている属性を取得するので引数はfalse
 
@@ -55,6 +59,24 @@ public class OrderServlet extends HttpServlet {
 		// actionキーが「input_customer」またはパラメータが存在しない場合：お客様情報入力画面に遷移
 		if (action == null || action.length() == 0 || action.equals("input_customer")) {
 			this.gotoPage(request, response, "customerInfo.jsp");
+
+		// actionキーが「confirm」の場合：入力情報確認画面に遷移
+		} else if (action.equals("confirm")) {
+			// リクエストパラメータの取得
+			String name = request.getParameter("name");
+			String address = request.getParameter("address");
+			String tel = request.getParameter("tel");
+			String email = request.getParameter("email");
+			CustomerBean customer = new CustomerBean();
+			customer.setName(name);
+			customer.setAddress(address);
+			customer.setTel(tel);
+			customer.setEmail(email);
+
+			// セッションスコープに顧客情報を登録
+			session.setAttribute("customer", customer);
+			// 確認画面に遷移
+			this.gotoPage(request, response, "confirm.jsp");
 		}
 	}
 

@@ -19,9 +19,7 @@
 			<th>単価（税込）</th>
 			<th>個数</th>
 			<th>小計</th>
-			<th>削除</th>
 		</tr>
-
 		<c:forEach items="${cart.items}" var="item">
 		<tr>
 			<td>${item.value.code}</td>
@@ -29,12 +27,6 @@
 			<td>${item.value.price}円</td>
 			<td>${item.value.quantity}</td>
 			<td>${item.value.price * item.value.quantity}円</td>
-			<td>
-				<form action="/shopping/CartServlet?action=delete" method="post">
-					<input type="hidden" name="item_code" value="${item.value.code}" />
-					<input type="submit" value="削除" />
-				</form>
-			</td>
 		</tr>
 		</c:forEach>
 		<tr>
@@ -42,28 +34,29 @@
 		</tr>
 	</table>
 
-	<h3>お客様情報を入力してください。</h3>
+	<h3>お客様情報</h3>
 
-	<form action="/shopping/OrderServlet?action=confirm" method="post">
-		<table border="1">
-			<tr>
-				<th>お名前</th>
-				<td><input type="text" name="name" value="鈴木一郎" /></td>
-			</tr>
-			<tr>
-				<th>住所</th>
-				<td><input type="text" name="address" value="東京都新宿区" /></td>
-			</tr>
-			<tr>
-				<th>電話</th>
-				<td><input type="text" name="tel" value="03-3333-3333" /></td>
-			</tr>
-			<tr>
-				<th>e-mail</th>
-				<td><input type="text" name="email" value="ichiro@abc.com" /></td>
-			</tr>
-		</table>
-		<input type="submit" value="確認画面へ" />
+	<table border="1">
+		<tr>
+			<th>お名前</th>
+			<td>${customer.name}</td>
+		</tr>
+		<tr>
+			<th>住所</th>
+			<td>${customer.address}</td>
+		</tr>
+		<tr>
+			<th>電話</th>
+			<td>${customer.tel}</td>
+		</tr>
+		<tr>
+			<th>e-mail</th>
+			<td>${customer.email}</td>
+		</tr>
+	</table>
+
+	<form action="order.html" method="post">
+		<input type="submit" value="この内容で注文" />
 	</form>
 
 </body>
