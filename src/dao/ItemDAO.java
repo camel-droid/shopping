@@ -102,6 +102,12 @@ public class ItemDAO {
 		}
 	}
 
+	/**
+	 * 指定された商品分類の商品を取得する。
+	 * @param categoryCode 商品分類番号
+	 * @return 商品番号に合致した商品の商品リスト（合致した商品がない場合は0件の商品リストとなる）
+	 * @throws DAOException
+	 */
 	public List<ItemBean> findByCategory(int categoryCode) throws DAOException {
 		// データベース接続関連オブジェクトの初期化
 		PreparedStatement pstmt = null;
@@ -141,6 +147,49 @@ public class ItemDAO {
 		}
 
 
+	}
+
+	/**
+	 * 指定された主キー（商品番号）に合致する商品を取得する。
+	 * @param code 取得対象の商品の商品番号
+	 * @return 商品番号に合致した商品があればItemBeanのインスタンス、それ以外はnull
+	 * @throws DAOException
+	 */
+	public ItemBean findByPrimariKey(int code) throws DAOException {
+		// データベース接続関連オブジェクトの初期化
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+
+		try {
+			String sql = "select * from item where code = ?";
+			pstmt = this.con.prepareStatement(sql);
+			// プレースホルダを設定
+			pstmt.setInt(1, code);
+			// SQLの実行と結果セットの取得
+			rs = pstmt.executeQuery();
+			// 結果セットから商品を取得
+			ItemBean bean = null;
+			if (rs.next()) {
+				String name = rs.getString("name");
+				int price = rs.getInt("price");
+				bean = new ItemBean(code, name, price);
+			}
+
+			// 商品を返却
+			return bean;
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw new DAOException("レコードの取得に失敗しました。");
+		} finally {
+			try {
+				if (rs != null) rs.close();
+				if (pstmt != null) pstmt.close();
+				this.close();
+			} catch (Exception e) {
+				throw new DAOException("リソースの解放に失敗しました。");
+			}
+		}
 	}
 
 
