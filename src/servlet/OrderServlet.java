@@ -12,6 +12,8 @@ import javax.servlet.http.HttpSession;
 
 import bean.CartBean;
 import bean.CustomerBean;
+import dao.DAOException;
+import dao.OrderDAO;
 
 /**
  * Servlet implementation class OrderServlet
@@ -76,7 +78,35 @@ public class OrderServlet extends HttpServlet {
 			// セッションスコープに顧客情報を登録
 			session.setAttribute("customer", customer);
 			// 確認画面に遷移
-			this.gotoPage(request, response, "confirm.jsp");
+			this.gotoPage(request, response, "/confirm.jsp");
+
+		// actionキーが「order」の場合：完了画面に遷移
+		} else if (action.equals("order")) {
+			// 顧客情報を取得
+			CustomerBean customer = (CustomerBean) session.getAttribute("customer");
+			// 顧客情報がない場合：：不正アクセスである可能性があるのでエラーページに強制的に遷移
+			if (customer == null) {
+				request.setAttribute("message", "正しく操作してください。");
+				this.gotoPage(request, response, "/errInternal.jsp");
+				return;
+			}
+
+			try {
+				// 注文を確定
+				OrderDAO dao = new OrderDAO();
+				int orderNumber = dao.saveOrder(customer, cart);
+				// リクエストスコープに注文番号を登録
+				request.setAttribute("orderNumber", orderNumber);
+				// 完了画面に遷移
+				this.gotoPage(request, response, "/order.jsp");
+			} catch (DAOException e) {
+				e.printStackTrace();
+				request.setAttribute("message", "内部エラーが発生しました。");
+				this.gotoPage(request, response, "/errInternal.jsp");
+			}
+		} else {
+			request.setAttribute("message", "正しく操作してください。");
+			this.gotoPage(request, response, "/errInternal.jsp");
 		}
 	}
 
