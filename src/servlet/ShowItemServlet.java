@@ -36,9 +36,11 @@ public class ShowItemServlet extends ActionServlet {
 		// パラメータの解析：actionキーを取得して処理を分岐
 		String action = request.getParameter("action");
 
+		// 次画面URLを初期化
+		String nextPage = "";
 		// actionキーが「top」またはパラメータが存在しない場合はトップページに遷移
 		if (this.isDefaultAction(request, "top")) {
-			this.gotoPage(request, response, "/top.jsp");
+			nextPage = "/top.jsp";
 
 		// actionキーが「list」の場合：商品一覧に遷移
 		} else if (action.equals("list")) {
@@ -51,12 +53,15 @@ public class ShowItemServlet extends ActionServlet {
 				// リクエストスコープに商品リストを登録
 				 request.setAttribute("items", list);
 				// 商品一覧に遷移
-				this.gotoPage(request, response, "/list.jsp");
+				nextPage = "/list.jsp";
 			} catch (DAOException e) {
 				e.printStackTrace();
 				this.gotoInternalErrorUrl(request, response);
 			}
 		}
+
+		// 次画面に遷移
+		this.gotoPage(request, response, nextPage);
 	}
 
 	/**
