@@ -55,7 +55,7 @@
 		</tr>
 	</table>
 
-	<form action="order.html" method="post">
+	<form action="/shopping/OrderServlet?action=order" method="post">
 		<input type="submit" value="この内容で注文" />
 	</form>
 
