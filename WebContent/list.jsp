@@ -11,7 +11,7 @@
 	<!-- メニュー -->
 	<jsp:include page="/menu.jsp" />
 
-	<h3>商品一覧（JSP版）</h3>
+	<h3>商品一覧</h3>
 	<c:forEach items="${items}" var="item">
 	<form action="/shopping/snapshot/cart.html">
 		商品番号：${item.code}<br />

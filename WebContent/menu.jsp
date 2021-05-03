@@ -8,5 +8,5 @@
 <a href="/shopping/ShowItemServlet?action=list&code=${category.code}">${category.name}</a>|
 </c:forEach>
 
-<a href="/shopping/snapshot/cart.html">カートを見る</a>
+<a href="/shopping/CartServlet?action=show">カートを見る</a>
 
