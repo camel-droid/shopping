@@ -1,1 +1,1 @@
-<jsp:forward page="/ShowItemServlet?action=top" />
+<jsp:forward page="/AuthServlet?action=auth" />

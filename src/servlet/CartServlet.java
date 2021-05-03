@@ -35,9 +35,13 @@ public class CartServlet extends ActionServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// パラメータの解析：actionキーを取得して処理を分岐
 		String action = request.getParameter("action");
+
+		// 次画面URLを初期化
+		String nextPage = "/cart.jsp";
+
 		// actionキーが「show」またはパラメータがない場合はカート画面に遷移
 		if (this.isDefaultAction(request, "show")) {
-			this.gotoPage(request, response, "cart.jsp");
+			nextPage = "/cart.jsp";
 
 		// actionキーが「add」の場合：カート内商品リストに商品を追加してカート画面に遷移（自画面遷移）
 		} else if (action.equals("add")) {
@@ -62,7 +66,7 @@ public class CartServlet extends ActionServlet {
 				// カートに追加する
 				cart.addCart(bean, quantity);
 				// 自画面遷移
-				this.gotoPage(request, response, "/cart.jsp");
+				//nextPage = "/cart.jsp";
 			} catch (DAOException e) {
 				e.printStackTrace();
 				this.gotoInternalErrorUrl(request, response);
@@ -93,8 +97,11 @@ public class CartServlet extends ActionServlet {
 
 			// カートから商品を削除
 			cart.deleteCart(code);
-			this.gotoPage(request, response, "cart.jsp");
+			//nextPage = "/cart.jsp";
 		}
+
+		// 自画面遷移
+		this.gotoPage(request, response, nextPage);
 	}
 
 	/**
