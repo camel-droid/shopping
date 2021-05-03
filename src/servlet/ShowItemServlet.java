@@ -3,7 +3,6 @@ package servlet;
 import java.io.IOException;
 import java.util.List;
 
-import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -19,16 +18,16 @@ import dao.ItemDAO;
  * Servlet implementation class ShowItemServlet
  */
 @WebServlet("/ShowItemServlet")
-public class ShowItemServlet extends HttpServlet {
+public class ShowItemServlet extends ActionServlet {
+
 	private static final long serialVersionUID = 1L;
 
-    /**
-     * @see HttpServlet#HttpServlet()
-     */
-    public ShowItemServlet() {
-        super();
-        // TODO Auto-generated constructor stub
-    }
+	/**
+	 * @see HttpServlet#HttpServlet()
+	 */
+	public ShowItemServlet() {
+		super();
+	}
 
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
@@ -38,8 +37,8 @@ public class ShowItemServlet extends HttpServlet {
 		String action = request.getParameter("action");
 
 		// actionキーが「top」またはパラメータが存在しない場合はトップページに遷移
-		if (action == null || action.length() == 0 || action.equals("top")) {
-			gotoPage(request, response, "top.jsp");
+		if (this.isDefaultAction(request, "top")) {
+			this.gotoPage(request, response, "/top.jsp");
 
 		// actionキーが「list」の場合：商品一覧に遷移
 		} else if (action.equals("list")) {
@@ -52,11 +51,10 @@ public class ShowItemServlet extends HttpServlet {
 				// リクエストスコープに商品リストを登録
 				 request.setAttribute("items", list);
 				// 商品一覧に遷移
-				gotoPage(request, response, "list.jsp");
+				this.gotoPage(request, response, "/list.jsp");
 			} catch (DAOException e) {
 				e.printStackTrace();
-				request.setAttribute("message", "内部エラーが発生しました。");
-				gotoPage(request, response, "errInternal.jsp");
+				this.gotoInternalErrorUrl(request, response);
 			}
 		}
 	}
@@ -65,21 +63,7 @@ public class ShowItemServlet extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
 		doGet(request, response);
-	}
-
-	/**
-	 * 指定されたURLに遷移する。
-	 * @param request HttpServletRequest
-	 * @param response HttpServletResponse
-	 * @param page 遷移先URL
-	 * @throws ServletException
-	 * @throws IOException
-	 */
-	private void gotoPage(HttpServletRequest request, HttpServletResponse response, String page) throws ServletException, IOException {
-		RequestDispatcher dispatcher = request.getRequestDispatcher(page);
-		dispatcher.forward(request, response);
 	}
 
 	@Override
@@ -95,7 +79,5 @@ public class ShowItemServlet extends HttpServlet {
 			e.printStackTrace();
 			throw new ServletException();
 		}
-
 	}
-
 }

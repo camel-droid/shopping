@@ -1,7 +1,5 @@
 package dao;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -15,39 +13,14 @@ import bean.ItemBean;
  * 商品関連のテーブルにアクセスするDAOクラス
  * @author tutor
  */
-public class ItemDAO {
-
-	/**
-	 * フィールド
-	 */
-	private Connection con;
+public class ItemDAO extends BaseDAO {
 
 	/**
 	 * コンストラクタ
 	 * @throws DAOException
 	 */
 	public ItemDAO() throws DAOException {
-		this.getConnection();
-	}
-
-	private void getConnection() throws DAOException {
-		// データベース接続情報の設定
-		String driver = "org.postgresql.Driver";
-		String url = "jdbc:postgresql:sample";
-		String user = "student";
-		String password = "himitu";
-
-		try {
-			// JDBCドライバの登録
-			Class.forName(driver);
-			// データベースに接続
-			this.con = DriverManager.getConnection(url, user, password);
-		} catch (ClassNotFoundException | SQLException e) {
-			e.printStackTrace();
-			throw new DAOException("データベースの接続に失敗しました。");
-		}
-
-
+		super();
 	}
 
 	/**
@@ -77,7 +50,6 @@ public class ItemDAO {
 			return list;
 
 		} catch (SQLException e) {
-			// TODO 自動生成された catch ブロック
 			e.printStackTrace();
 			throw new DAOException("レコードの取得に失敗しました。");
 		} finally {
@@ -88,17 +60,6 @@ public class ItemDAO {
 			} catch (Exception e) {
 				throw new DAOException("リソースの解放に失敗しました。");
 			}
-		}
-	}
-
-	/**
-	 * データベース接続を切断する：データベース接続オブジェクトを解放する。
-	 * @throws SQLException
-	 */
-	private void close() throws SQLException {
-		if (this.con != null) {
-			this.con.close();
-			this.con = null;
 		}
 	}
 
@@ -145,7 +106,6 @@ public class ItemDAO {
 				throw new DAOException("リソースの解放に失敗しました。");
 			}
 		}
-
 
 	}
 
