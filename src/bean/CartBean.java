@@ -69,4 +69,13 @@ public class CartBean {
 			this.total += item.getPrice() * item.getQuantity();
 		}
 	}
+
+	/**
+	 * カートから商品を削除する。
+	 * @param itemCode 削除対象の商品の商品番号
+	 */
+	public void deleteCart(int itemCode) {
+		this.items.remove(Integer.valueOf(itemCode));
+		this.recalcTotal();
+	}
 }
