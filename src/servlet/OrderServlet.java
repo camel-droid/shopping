@@ -42,7 +42,7 @@ public class OrderServlet extends ActionServlet {
 		// セッションがない場合：不正なアクセスが含まれている場合もあるのでエラーページに強制的に遷移
 		if (session == null) {
 			request.setAttribute("message", "セッションが切れています。もう一度トップページより操作してください。");
-			this.gotoPage(request, response, "errInternal.jsp");
+			this.gotoInternalErrorUrl(request, response);
 			return;
 		}
 
@@ -50,16 +50,19 @@ public class OrderServlet extends ActionServlet {
 		CartBean cart = (CartBean) session.getAttribute("cart");
 		if (cart == null) {
 			request.setAttribute("message", "正しく操作してください。");
-			this.gotoPage(request, response, "errInternal.jsp");
+			this.gotoInternalErrorUrl(request, response);
 			return;
 		}
 
 		// リクエストパラメータの取得
 		String action = request.getParameter("action");
 
+		// 次画面URLを初期化
+		String nextPage = "";
+
 		// actionキーが「input_customer」またはパラメータが存在しない場合：お客様情報入力画面に遷移
 		if (this.isDefaultAction(request, "input_customer")) {
-			this.gotoPage(request, response, "customerInfo.jsp");
+			nextPage = "customerInfo.jsp";
 
 		// actionキーが「confirm」の場合：入力情報確認画面に遷移
 		} else if (action.equals("confirm")) {
@@ -77,7 +80,7 @@ public class OrderServlet extends ActionServlet {
 			// セッションスコープに顧客情報を登録
 			session.setAttribute("customer", customer);
 			// 確認画面に遷移
-			this.gotoPage(request, response, "/confirm.jsp");
+			nextPage = "/confirm.jsp";
 
 		// actionキーが「order」の場合：完了画面に遷移
 		} else if (action.equals("order")) {
@@ -99,7 +102,7 @@ public class OrderServlet extends ActionServlet {
 				// リクエストスコープに注文番号を登録
 				request.setAttribute("orderNumber", orderNumber);
 				// 完了画面に遷移
-				this.gotoPage(request, response, "/order.jsp");
+				nextPage = "/order.jsp";
 			} catch (DAOException e) {
 				e.printStackTrace();
 				this.gotoInternalErrorUrl(request, response);
@@ -107,6 +110,8 @@ public class OrderServlet extends ActionServlet {
 		} else {
 			this.gotoErrorUrl(request, response, "正しく操作してください。");
 		}
+		// 次画面に遷移
+		this.gotoPage(request, response, nextPage);
 	}
 
 	/**
