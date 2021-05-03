@@ -8,6 +8,7 @@
 <body>
 	<h3>ユーザ認証</h3>
 	<form action="/shopping/AuthServlet?action=signin" method="post">
+	<p>ユーザ登録は <a href="/shopping/UserServlet?action=entry">こちら</a> から</p>
 	<table>
 		<tr>
 			<th>ユーザID</th>
