@@ -2,7 +2,6 @@ package servlet;
 
 import java.io.IOException;
 
-import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -19,16 +18,16 @@ import dao.ItemDAO;
  * Servlet implementation class CartServlet
  */
 @WebServlet("/CartServlet")
-public class CartServlet extends HttpServlet {
+public class CartServlet extends ActionServlet {
+
 	private static final long serialVersionUID = 1L;
 
-    /**
-     * @see HttpServlet#HttpServlet()
-     */
-    public CartServlet() {
-        super();
-        // TODO Auto-generated constructor stub
-    }
+	/**
+	 * @see HttpServlet#HttpServlet()
+	 */
+	public CartServlet() {
+		super();
+	}
 
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
@@ -37,7 +36,7 @@ public class CartServlet extends HttpServlet {
 		// パラメータの解析：actionキーを取得して処理を分岐
 		String action = request.getParameter("action");
 		// actionキーが「show」またはパラメータがない場合はカート画面に遷移
-		if (action == null || action.length() == 0 || action.equals("show")) {
+		if (this.isDefaultAction(request, "show")) {
 			this.gotoPage(request, response, "cart.jsp");
 
 		// actionキーが「add」の場合：カート内商品リストに商品を追加してカート画面に遷移（自画面遷移）
@@ -63,11 +62,10 @@ public class CartServlet extends HttpServlet {
 				// カートに追加する
 				cart.addCart(bean, quantity);
 				// 自画面遷移
-				this.gotoPage(request, response, "cart.jsp");
+				this.gotoPage(request, response, "/cart.jsp");
 			} catch (DAOException e) {
 				e.printStackTrace();
-				request.setAttribute("message", "内部エラーが発生しました。");
-				gotoPage(request, response, "errInternal.jsp");
+				this.gotoInternalErrorUrl(request, response);
 			}
 
 		// actionキーが「delete」の場合：カートから指定された商品を削除
@@ -85,8 +83,7 @@ public class CartServlet extends HttpServlet {
 			// カートがない場合：不正アクセスである可能性があるのでエラーページに強制的に遷移
 			CartBean cart = (CartBean) session.getAttribute("cart");
 			if (cart == null) {
-				request.setAttribute("message", "正しく操作してください。");
-				this.gotoPage(request, response, "errInternal.jsp");
+				this.gotoErrorUrl(request, response, "正しく操作してください。");
 				return;
 			}
 
@@ -101,24 +98,9 @@ public class CartServlet extends HttpServlet {
 	}
 
 	/**
-	 * 指定されたURLに遷移する。
-	 * @param request HttpServletRequest
-	 * @param response HttpServletResponse
-	 * @param page 遷移先URL
-	 * @throws ServletException
-	 * @throws IOException
-	 */
-	private void gotoPage(HttpServletRequest request, HttpServletResponse response, String page) throws ServletException, IOException {
-		RequestDispatcher dispatcher = request.getRequestDispatcher(page);
-		dispatcher.forward(request, response);
-	}
-
-	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
 		doGet(request, response);
 	}
-
 }

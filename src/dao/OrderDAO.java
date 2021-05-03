@@ -1,8 +1,6 @@
 package dao;
 
-import java.sql.Connection;
 import java.sql.Date;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -17,42 +15,14 @@ import bean.ItemBean;
  * 注文に関連したテーブルにアクセスするDAOクラス
  * @author tutor
  */
-public class OrderDAO {
-
-	/**
-	 * フィールド
-	 */
-	private Connection con; // データベース接続オブジェクト
+public class OrderDAO extends BaseDAO {
 
 	/**
 	 * コンストラクタ
 	 * @throws DAOException
 	 */
 	public OrderDAO() throws DAOException {
-		this.getConnection();
-	}
-
-	/**
-	 * データベースに接続する：データベース接続情報を取得する。
-	 * @throws DAOException
-	 */
-	private void getConnection() throws DAOException {
-
-		/**
-		 * データベース接続情報
-		 */
-		String driver = "org.postgresql.Driver";
-		String url = "jdbc:postgresql:sample";
-		String user = "student";
-		String password = "himitu";
-
-		try {
-			Class.forName(driver);
-			this.con = DriverManager.getConnection(url, user, password);
-		} catch (ClassNotFoundException | SQLException e) {
-			e.printStackTrace();
-			throw new DAOException("データベースの接続に失敗しました。");
-		}
+		super();
 	}
 
 	/**
@@ -148,18 +118,5 @@ public class OrderDAO {
 			}
 		}
 	}
-
-	/**
-	 * データベース接続を切断する：データベース接続オブジェクトを解放する。
-	 * @throws SQLException
-	 */
-	private void close() throws SQLException {
-		if (this.con != null) {
-			this.con.close();
-			this.con = null;
-		}
-	}
-
-
 
 }
