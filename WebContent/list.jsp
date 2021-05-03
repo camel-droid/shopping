@@ -13,7 +13,7 @@
 
 	<h3>商品一覧</h3>
 	<c:forEach items="${items}" var="item">
-	<form action="/shopping/snapshot/cart.html">
+	<form action="/shopping/CartServlet?action=add" method="post">
 		商品番号：${item.code}<br />
 		商品名：${item.name}<br />
 		価格（税込）：${item.price}円<br />
@@ -25,6 +25,7 @@
 			<option value="4">4</option>
 			<option value="5">5</option>
 		</select>個<br/>
+		<input type="hidden" name="item_code" value="${item.code}" />
 		<input type="submit" value="カートに追加" />
 	</form>
 	</c:forEach>
