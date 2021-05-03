@@ -8,6 +8,7 @@
 <body>
 
 <h1>${message}</h1>
+<p><a href="/shopping">ユーザ認証ページに戻る</a></p>
 
 </body>
 </html>

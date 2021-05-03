@@ -62,9 +62,9 @@ public class AuthServlet extends ActionServlet {
 				} else {
 					// セッションに認証情報を登録
 					HttpSession session = request.getSession();
-					AuthBean auth = (AuthBean) session.getAttribute("auth");
+					AuthBean auth = (AuthBean) session.getAttribute("signin");
 					if (auth == null) {
-						session.setAttribute("auth", signin);
+						session.setAttribute("signin", signin);
 					} else {
 						this.gotoInternalErrorUrl(request, response);
 						return;
@@ -72,7 +72,7 @@ public class AuthServlet extends ActionServlet {
 					// 管理者権限の場合は遷移先URLに管理用ページを指定
 					if (signin.getRole() == 1) nextPage = "/system/system.jsp";
 					// 一般ユーザ権限の場合は遷移先URLにトップページを指定
-					if (signin.getRole() == 2) nextPage = "/top.jsp";
+					if (signin.getRole() == 2) nextPage = "/ShowItemServlet?action=top";
 				}
 
 				// 遷移先URLに遷移
@@ -89,14 +89,14 @@ public class AuthServlet extends ActionServlet {
 				return;
 			}
 
-			AuthBean auth = (AuthBean) session.getAttribute("auth");
+			AuthBean auth = (AuthBean) session.getAttribute("signin");
 			if (auth == null) {
 				this.gotoErrorUrl(request, response, "正しい操作をしてください。");
 				return;
 			}
 
 			// セッションから認証情報を削除
-			session.removeAttribute("auth");
+			session.removeAttribute("signin");
 			/* TODO ログアウト時にカート情報・顧客情報を削除する？
 			if (session.getAttribute("cart") != null) session.removeAttribute("cart");
 			if (session.getAttribute("customer") != null) session.removeAttribute("customer");
