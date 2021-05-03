@@ -35,36 +35,13 @@
 			<td>${item.value.quantity}</td>
 			<td>${item.value.price * item.value.quantity}円</td>
 			<td>
-				<form action="" method="post">
+				<form action="/shopping/CartServlet?action=delete" method="post">
+					<input type="hidden" name="item_code" value="${item.value.code}" />
 					<input type="submit" value="削除" />
 				</form>
 			</td>
 		</tr>
 		</c:forEach>
-<!-- 		<tr> -->
-<!-- 			<td>2</td> -->
-<!-- 			<td>MLB Funs</td> -->
-<!-- 			<td>980円</td> -->
-<!-- 			<td>4</td> -->
-<!-- 			<td>3920円</td> -->
-<!-- 			<td> -->
-<!-- 				<form action="" method="post"> -->
-<!-- 					<input type="submit" value="削除" /> -->
-<!-- 				</form> -->
-<!-- 			</td> -->
-<!-- 		</tr> -->
-<!-- 		<tr> -->
-<!-- 			<td>4</td> -->
-<!-- 			<td>なつかしのアニメシリーズ</td> -->
-<!-- 			<td>2000円</td> -->
-<!-- 			<td>3</td> -->
-<!-- 			<td>6000円</td> -->
-<!-- 			<td> -->
-<!-- 				<form action="" method="post"> -->
-<!-- 					<input type="submit" value="削除" /> -->
-<!-- 				</form> -->
-<!-- 			</td> -->
-<!-- 		</tr> -->
 		<tr>
 			<td colspan="6" style="text-align:right">総計：${cart.total}0円</td>
 		</tr>
